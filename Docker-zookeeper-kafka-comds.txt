@@ -9,7 +9,7 @@ docker network create kafka-demo
 docker run -d --net=kafka-demo --name=zookeeper-demo -e ZOOKEEPER_CLIENT_PORT=32181  confluentinc/cp-zookeeper:4.0.0
 
 ----------Start Kafka 
-docker run –-network=kafka-demo -d -p 9092:9092 –-name=kafka-demo -e KAFKA_ZOOKEEPER_CONNECT=zookeeper-demo:32181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
+docker run â€“-network=kafka-demo -d -p 9092:9092 â€“-name=kafka-demo -e KAFKA_ZOOKEEPER_CONNECT=zookeeper-demo:32181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
 
 ---------Create Topic with 1 partition
 docker run --network=kafka-demo --rm confluentinc/cp-kafka:4.0.0  kafka-topics --create --topic customer --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper-demo:32181
@@ -18,9 +18,21 @@ docker run --network=kafka-demo --rm confluentinc/cp-kafka:4.0.0  kafka-topics -
 
 docker run --net=kafka-demo --rm confluentinc/cp-kafka:4.0.0  kafka-topics --describe --topic customer --zookeeper zookeeper-demo:32181
 
----Publish
 
-docker run --net=kafka-demo --rm confluentinc/cp-kafka:4.0.0  bash -c "seq 42 | kafka-console-producer --request-required-acks 1 --broker-list localhost:9092 --topic customer && echo 'Produced 42 messages.'"
+---Not tested yet-----
+---Publish didn't work with integration
 
----Read back
-docker run --net=kafka-demo --rm confluentinc/cp-kafka:4.0.0  kafka-console-consumer --bootstrap-server localhost:9092 --topic customer --from-beginning --max-messages 42
+docker run --net=kafka-demo --rm confluentinc/cp-kafka:4.0.0  bash -c "seq 42 | kafka-console-producer --request-required-acks 1 --broker-list kafka-demo:9092 --topic customer && echo 'Produced 42 messages.'"
+
+---Read back didn't work with integration
+docker run --net=kafka-demo --rm confluentinc/cp-kafka:4.0.0  kafka-console-consumer --bootstrap-server kafka-demo:9092 --topic customer --from-beginning --max-messages 42
+
+
+----Kafkacat--Apache Kafka producer and consumer commandline tool
+docker run --tty --network kafka-demo confluentinc/cp-kafkacat kafkacat -b kafka-demo:9092 -L
+
+---------References
+https://www.baeldung.com/spring-kafka
+https://www.youtube.com/watch?v=NjHYWEV_E_o
+https://www.youtube.com/watch?v=IncG0_XSSBg
+

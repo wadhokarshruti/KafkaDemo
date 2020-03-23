@@ -16,29 +16,18 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class CustomerDetailsProducer {
     public static final Logger logger = LoggerFactory.getLogger(CustomerDetailsProducer.class);
-    public static final String TOPIC = "Customer";
+    public static final String TOPIC = "customer";
 
     @Autowired
     KafkaTemplate<String,String> kafkaTemplate;
 
+    public CustomerDetailsProducer() {
+        logger.info("Constructor::CustomerDetailsProducer");
+    }
+
 
     public void sendMessage(String message) {
         logger.info(String.format("#### -> Producing message -> %s", message));
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("client.id", "KafkaExampleProducer");
-        props.put("key.serializer", LongSerializer.class.getName());
-        props.put("value.serializer", StringSerializer.class.getName());
-        KafkaProducer<Long, String> producer = new KafkaProducer<>(props);
-        ProducerRecord<Long, String> record = new ProducerRecord<>("customer", 1L, "Test 1");
-        try {
-            producer.send(record).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        producer.flush();
-        //this.kafkaTemplate.send(TOPIC, message);
+        this.kafkaTemplate.send(TOPIC, message);
     }
 }

@@ -3,10 +3,7 @@ package com.demo.kafka.controller;
 import com.demo.kafka.consumer.CustomerDetailsConsumer;
 import com.demo.kafka.producer.CustomerDetailsProducer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/kafkaDemo")
@@ -20,13 +17,9 @@ public class CustomerDetailsController {
         this.consumer = consumer;
     }
 
-    @PostMapping(value = "publisher")
-    public void sendMessageToKafkaTopic(@RequestParam("message") String message){
+    @GetMapping(value = "publisher/{message}")
+    public String sendMessageToKafkaTopic(@PathVariable String message){
         this.producer.sendMessage(message);
-    }
-
-    @PostMapping(value = "consumer")
-    public void readFromKafkaTopic(@RequestParam("message") String message){
-        this.consumer.customerDetailConsumer(message);
+        return "Published successfully!!";
     }
 }
