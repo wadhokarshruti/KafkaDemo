@@ -11,9 +11,13 @@ Familiarity with Springboot
 Let us now get started to create Zookeeper and Kafka one node cluster with default configurations on Docker. Our quest is to make Kafka instance available on host machine at localhost:9092
 
 We will start creating a network for our project in Docker
+
 >docker network create kafka-demo
+
  Start the Zookeeper instance on Docker, which should be accessible on port 32181 when we start Kafka
+ 
 >docker run -d --net=kafka-demo --name=zookeeper-demo -e ZOOKEEPER_CLIENT_PORT=32181  confluentinc/cp-zookeeper:4.0.0
+
 Verify Zookeeper stared normally
 
 >docker logs zookeeper-demo
