@@ -21,11 +21,14 @@ We will start creating a network for our project in Docker
 Verify Zookeeper stared normally
 
 >docker logs zookeeper-demo
+
 Now that the zookeeper is running fine which by the way Kafka uses at the back end, we can start single node Kafka on Docker with default configurations.
+
 >docker run –-network=kafka-demo -d -p 9092:9092 –-name=kafka-demo -e KAFKA_ZOOKEEPER_CONNECT=zookeeper-demo:32181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
+
 Verify Kafka stared normally
 
-:- Docker logs kafka-demo
+>docker logs kafka-demo
 
 Our local single node Kafka is ready to be used by Springboot, in below steps we target to Produce data on topic 'customer' and Consume same. Code is available at github repository in case you would like to download and directly try out. 
 
